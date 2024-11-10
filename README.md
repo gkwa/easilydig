@@ -18,10 +18,20 @@ go install github.com/gkwa/easilydig@latest
 
 ### Append Metrics
 
-Add new usage metric from JSON file:
+Add new usage metric(s) from JSON file(s):
 
 ```bash
-easilydig append /path/to/data.json
+# Single file
+easilydig append data.json
+
+# Single file with absolute path
+easilydig append /path/to/data.json 
+
+# Multiple files using glob pattern
+easilydig append ./data/*.json
+
+# Multiple glob patterns
+easilydig append ./data/*.json ./archive/*.json
 ```
 
 Expected JSON format:
