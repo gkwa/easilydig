@@ -26,11 +26,13 @@ func NewMetricService(repo MetricRepositoryInterface, logger logr.Logger) *Metri
 
 func (s *MetricService) AppendFiles(ctx context.Context, patterns []string) error {
 	var allFiles []string
+
 	for _, pattern := range patterns {
 		matches, err := filepath.Glob(pattern)
 		if err != nil {
 			return fmt.Errorf("failed to expand glob pattern %s: %w", pattern, err)
 		}
+
 		allFiles = append(allFiles, matches...)
 	}
 
@@ -43,6 +45,7 @@ func (s *MetricService) AppendFiles(ctx context.Context, patterns []string) erro
 			s.logger.Error(err, "Failed to process file", "file", file)
 			continue
 		}
+
 		s.logger.Info("Successfully appended metric to DynamoDB", "file", file)
 	}
 
@@ -63,6 +66,16 @@ func (s *MetricService) appendFile(ctx context.Context, file string) error {
 	if err := s.repo.Append(ctx, metric); err != nil {
 		return fmt.Errorf("failed to append metric to DynamoDB: %w", err)
 	}
+
+	return nil
+}
+
+func (s *MetricService) DeleteByTimestamp(ctx context.Context, ts string) error {
+	if err := s.repo.DeleteByTimestamp(ctx, ts); err != nil {
+		return fmt.Errorf("failed to delete records: %w", err)
+	}
+
+	s.logger.Info("Successfully deleted records", "timestamp", ts)
 
 	return nil
 }

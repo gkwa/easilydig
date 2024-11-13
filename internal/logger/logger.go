@@ -23,6 +23,7 @@ func NewConsoleLogger(verbosity int, jsonFormat bool) logr.Logger {
 		if err != nil {
 			relPath = file
 		}
+
 		return relPath + ":" + strconv.Itoa(line)
 	}
 

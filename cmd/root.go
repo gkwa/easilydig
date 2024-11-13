@@ -54,6 +54,7 @@ func init() {
 		fmt.Printf("Error binding verbose flag: %v\n", err)
 		os.Exit(1)
 	}
+
 	if err := viper.BindPFlag("log-format", rootCmd.PersistentFlags().Lookup("log-format")); err != nil {
 		fmt.Printf("Error binding log-format flag: %v\n", err)
 		os.Exit(1)
@@ -86,11 +87,14 @@ func LoggerFrom(ctx context.Context, keysAndValues ...interface{}) logr.Logger {
 	if cliLogger.IsZero() {
 		cliLogger = logger.NewConsoleLogger(verbose, logFormat == "json")
 	}
+
 	newLogger := cliLogger
+
 	if ctx != nil {
 		if l, err := logr.FromContext(ctx); err == nil {
 			newLogger = l
 		}
 	}
+
 	return newLogger.WithValues(keysAndValues...)
 }

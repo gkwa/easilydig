@@ -17,19 +17,23 @@ func TestCustomLogger(t *testing.T) {
 
 	cmd := rootCmd
 	cmd.SetArgs([]string{"version"})
+
 	err := cmd.Execute()
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
 	w.Close()
+
 	os.Stdout = oldStdout
 
 	var buf bytes.Buffer
+
 	_, err = io.Copy(&buf, r)
 	if err != nil {
 		t.Fatalf("Failed to copy output: %v", err)
 	}
+
 	output := buf.String()
 
 	if !strings.Contains(output, "Version:") {
@@ -42,6 +46,7 @@ func TestCustomLogger(t *testing.T) {
 func TestJSONLogger(t *testing.T) {
 	oldVerbose, oldLogFormat := verbose, logFormat
 	verbose, logFormat = 1, "json"
+
 	defer func() {
 		verbose, logFormat = oldVerbose, oldLogFormat
 	}()
@@ -55,19 +60,23 @@ func TestJSONLogger(t *testing.T) {
 
 	cmd := rootCmd
 	cmd.SetArgs([]string{"version"})
+
 	err := cmd.Execute()
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
 	w.Close()
+
 	os.Stdout = oldStdout
 
 	var buf bytes.Buffer
+
 	_, err = io.Copy(&buf, r)
 	if err != nil {
 		t.Fatalf("Failed to copy output: %v", err)
 	}
+
 	output := buf.String()
 
 	if !strings.Contains(output, "Version:") {

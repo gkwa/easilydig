@@ -19,15 +19,18 @@ func TestFetchCmd(t *testing.T) {
 
 	cmd := fetchCmd
 	cmd.SetArgs([]string{})
+
 	err := cmd.Execute()
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
 	w.Close()
+
 	os.Stdout = oldStdout
 
 	var buf bytes.Buffer
+
 	_, err = io.Copy(&buf, r)
 	if err != nil {
 		t.Fatalf("Failed to copy output: %v", err)
