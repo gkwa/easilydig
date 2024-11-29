@@ -1,63 +1,63 @@
 version: 2
 before:
   hooks:
-  - go mod tidy
-  - go generate ./...
+    - go mod tidy
+    - go generate ./...
 builds:
-- env:
-  - CGO_ENABLED=0
-  goos:
-  - linux
-  - windows
-  - darwin
-  main: main.go
-  goarch:
-  - amd64
-  binary: easilydig
-  id: easilydig
-  ldflags:
-  - -s -w
-    -X "github.com/gkwa/easilydig/version.Version={{ .Version }}"
-    -X "github.com/gkwa/easilydig/version.Date={{ .CommitDate }}"
-    -X "github.com/gkwa/easilydig/version.GoVersion={{ .Env.GOVERSION }}"
-    -X "github.com/gkwa/easilydig/version.ShortGitSHA={{ .ShortCommit }}"
-    -X "github.com/gkwa/easilydig/version.FullGitSHA={{ .FullCommit }}"
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    main: main.go
+    goarch:
+      - amd64
+    binary: easilydig
+    id: easilydig
+    ldflags:
+      - -s -w
+        -X "github.com/gkwa/easilydig/version.Version={{ .Version }}"
+        -X "github.com/gkwa/easilydig/version.Date={{ .CommitDate }}"
+        -X "github.com/gkwa/easilydig/version.GoVersion={{ .Env.GOVERSION }}"
+        -X "github.com/gkwa/easilydig/version.ShortGitSHA={{ .ShortCommit }}"
+        -X "github.com/gkwa/easilydig/version.FullGitSHA={{ .FullCommit }}"
 archives:
-- format: tar.gz
-  name_template: |-
-    easilydig_ {{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64
-                               {{- else if eq .Arch "386" }}i386
-                               {{- else }}
-                               {{ .Arch }}
-                               {{ end }}
-                               {{- if .Arm }}v{{ .Arm }}{{ end }}
-  format_overrides:
-  - goos: windows
-    format: zip
+  - format: tar.gz
+    name_template: |-
+      easilydig_ {{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64
+                                 {{- else if eq .Arch "386" }}i386
+                                 {{- else }}
+                                 {{ .Arch }}
+                                 {{ end }}
+                                 {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
 checksum:
   name_template: checksums.txt
 snapshot:
-  version_template: '{{ incpatch .Version }}-next'
+  version_template: "{{ incpatch .Version }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+      - "^docs:"
+      - "^test:"
 brews:
-- name: easilydig
-  directory: Formula
-  homepage: https://github.com/gkwa/easilydig
-  repository:
-    owner: gkwa
-    name: homebrew-tools
-    branch: main
+  - name: easilydig
+    directory: Formula
+    homepage: https://github.com/gkwa/easilydig
+    repository:
+      owner: gkwa
+      name: homebrew-tools
+      branch: main
 scoops:
-- name: easilydig
-  homepage: https://github.com/gkwa/easilydig
-  description: "Description of the easilydig project"
-  license: MIT
-  repository:
-    owner: gkwa
-    name: scoop-bucket
-    branch: master
+  - name: easilydig
+    homepage: https://github.com/gkwa/easilydig
+    description: "Description of the easilydig project"
+    license: MIT
+    repository:
+      owner: gkwa
+      name: scoop-bucket
+      branch: master

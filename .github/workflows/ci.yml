@@ -2,78 +2,78 @@ name: Build & Test
 "on":
   push:
     branches:
-    - '*'
+      - "*"
   pull_request:
     branches:
-    - '*'
+      - "*"
   schedule:
-  - cron: 01 13 * * SAT
+    - cron: 01 13 * * SAT
 jobs:
   build:
     name: Build & Test
     strategy:
       matrix:
         os:
-        - ubuntu-latest
-        - macOS-latest
-        - windows-latest
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-    - uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a
-      with:
-        go-version: stable
-        cache: true
-    - name: Set GOVERSION environment variable (Linux/macOS)
-      if: runner.os != 'Windows'
-      run: echo "GOVERSION=$(go version)" >> $GITHUB_ENV
-    - name: Set GOVERSION environment variable (Windows)
-      if: runner.os == 'Windows'
-      run: echo "GOVERSION=$(go version)" | Out-File -FilePath $env:GITHUB_ENV -Append
-    - name: Build & Test
-      run: |
-        go build -v
-        go test ./...
-    - name: Cache staticcheck
-      id: cache-staticcheck
-      uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a
-      with:
-        path: |
-          ${{ runner.os == 'Windows' && '~\go\bin\staticcheck.exe' || '~/go/bin/staticcheck' }}
-        key: ${{ runner.os }}-staticcheck-${{ hashFiles('go.mod') }}
-        restore-keys: |
-          ${{ runner.os }}-staticcheck-
-    - name: Install staticcheck (Linux/macOS)
-      if: runner.os != 'Windows' && steps.cache-staticcheck.outputs.cache-hit != 'true'
-      run: |
-        GOBIN=$(go env GOBIN)
-        if [ -z "$GOBIN" ]; then
-          GOBIN=$(go env GOPATH)/bin
-        fi
-        echo "Installing staticcheck to $GOBIN"
-        go install -v honnef.co/go/tools/cmd/staticcheck@latest
-        echo "$GOBIN" >> $GITHUB_PATH
-    - name: Install staticcheck (Windows)
-      if: runner.os == 'Windows' && steps.cache-staticcheck.outputs.cache-hit != 'true'
-      run: |
-        $GOBIN = if ($(go env GOBIN)) { $(go env GOBIN) } else { "$(go env GOPATH)\bin" }
-        echo "Installing staticcheck to $GOBIN"
-        go install -v honnef.co/go/tools/cmd/staticcheck@latest
-        echo "$GOBIN" | Out-File -FilePath $env:GITHUB_PATH -Append
-    - name: Add cached staticcheck to PATH (Windows)
-      if: runner.os == 'Windows' && steps.cache-staticcheck.outputs.cache-hit == 'true'
-      run: echo "$HOME\go\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
-    - name: Add cached staticcheck to PATH (Linux/macOS)
-      if: runner.os != 'Windows' && steps.cache-staticcheck.outputs.cache-hit == 'true'
-      run: echo "$HOME/go/bin" >> $GITHUB_PATH
-    - name: Run staticcheck
-      run: staticcheck ./...
-    - name: Run GoReleaser
-      if: runner.os == 'Linux'
-      uses: goreleaser/goreleaser-action@9ed2f89a662bf1735a48bc8557fd212fa902bebf
-      with:
-        args: release --snapshot --skip=publish --clean
-    - name: Colored Output Test
-      if: runner.os == 'Linux'
-      shell: script -q -e -c "bash {0}"
-      run: go run main.go -- main.go
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a
+        with:
+          go-version: stable
+          cache: true
+      - name: Set GOVERSION environment variable (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: echo "GOVERSION=$(go version)" >> $GITHUB_ENV
+      - name: Set GOVERSION environment variable (Windows)
+        if: runner.os == 'Windows'
+        run: echo "GOVERSION=$(go version)" | Out-File -FilePath $env:GITHUB_ENV -Append
+      - name: Build & Test
+        run: |
+          go build -v
+          go test ./...
+      - name: Cache staticcheck
+        id: cache-staticcheck
+        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a
+        with:
+          path: |
+            ${{ runner.os == 'Windows' && '~\go\bin\staticcheck.exe' || '~/go/bin/staticcheck' }}
+          key: ${{ runner.os }}-staticcheck-${{ hashFiles('go.mod') }}
+          restore-keys: |
+            ${{ runner.os }}-staticcheck-
+      - name: Install staticcheck (Linux/macOS)
+        if: runner.os != 'Windows' && steps.cache-staticcheck.outputs.cache-hit != 'true'
+        run: |
+          GOBIN=$(go env GOBIN)
+          if [ -z "$GOBIN" ]; then
+            GOBIN=$(go env GOPATH)/bin
+          fi
+          echo "Installing staticcheck to $GOBIN"
+          go install -v honnef.co/go/tools/cmd/staticcheck@latest
+          echo "$GOBIN" >> $GITHUB_PATH
+      - name: Install staticcheck (Windows)
+        if: runner.os == 'Windows' && steps.cache-staticcheck.outputs.cache-hit != 'true'
+        run: |
+          $GOBIN = if ($(go env GOBIN)) { $(go env GOBIN) } else { "$(go env GOPATH)\bin" }
+          echo "Installing staticcheck to $GOBIN"
+          go install -v honnef.co/go/tools/cmd/staticcheck@latest
+          echo "$GOBIN" | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: Add cached staticcheck to PATH (Windows)
+        if: runner.os == 'Windows' && steps.cache-staticcheck.outputs.cache-hit == 'true'
+        run: echo "$HOME\go\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+      - name: Add cached staticcheck to PATH (Linux/macOS)
+        if: runner.os != 'Windows' && steps.cache-staticcheck.outputs.cache-hit == 'true'
+        run: echo "$HOME/go/bin" >> $GITHUB_PATH
+      - name: Run staticcheck
+        run: staticcheck ./...
+      - name: Run GoReleaser
+        if: runner.os == 'Linux'
+        uses: goreleaser/goreleaser-action@9ed2f89a662bf1735a48bc8557fd212fa902bebf
+        with:
+          args: release --snapshot --skip=publish --clean
+      - name: Colored Output Test
+        if: runner.os == 'Linux'
+        shell: script -q -e -c "bash {0}"
+        run: go run main.go -- main.go

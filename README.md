@@ -25,7 +25,7 @@ Add new usage metric(s) from JSON file(s):
 easilydig append data.json
 
 # Single file with absolute path
-easilydig append /path/to/data.json 
+easilydig append /path/to/data.json
 
 # Multiple files using glob pattern
 easilydig append ./data/*.json
@@ -35,11 +35,12 @@ easilydig append ./data/*.json ./archive/*.json
 ```
 
 Expected JSON format:
+
 ```json
 {
   "date": "2024-11-10",
   "amount": 61.25,
-  "amountUnits": "GB", 
+  "amountUnits": "GB",
   "total": 400,
   "totalUnits": "GB",
   "overage": 0,
@@ -91,7 +92,7 @@ go test ./... -v
 
 Run Linter:
 
-```bash 
+```bash
 golangci-lint run
 ```
 
