@@ -15,17 +15,29 @@ type MockDynamoDBService struct {
 	mock.Mock
 }
 
-func (m *MockDynamoDBService) PutItem(ctx context.Context, params *dynamodb.PutItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error) {
+func (m *MockDynamoDBService) PutItem(
+	ctx context.Context,
+	params *dynamodb.PutItemInput,
+	optFns ...func(*dynamodb.Options),
+) (*dynamodb.PutItemOutput, error) {
 	args := m.Called(ctx, params)
 	return args.Get(0).(*dynamodb.PutItemOutput), args.Error(1)
 }
 
-func (m *MockDynamoDBService) Scan(ctx context.Context, params *dynamodb.ScanInput, optFns ...func(*dynamodb.Options)) (*dynamodb.ScanOutput, error) {
+func (m *MockDynamoDBService) Scan(
+	ctx context.Context,
+	params *dynamodb.ScanInput,
+	optFns ...func(*dynamodb.Options),
+) (*dynamodb.ScanOutput, error) {
 	args := m.Called(ctx, params)
 	return args.Get(0).(*dynamodb.ScanOutput), args.Error(1)
 }
 
-func (m *MockDynamoDBService) DeleteItem(ctx context.Context, params *dynamodb.DeleteItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.DeleteItemOutput, error) {
+func (m *MockDynamoDBService) DeleteItem(
+	ctx context.Context,
+	params *dynamodb.DeleteItemInput,
+	optFns ...func(*dynamodb.Options),
+) (*dynamodb.DeleteItemOutput, error) {
 	args := m.Called(ctx, params)
 	return args.Get(0).(*dynamodb.DeleteItemOutput), args.Error(1)
 }
@@ -47,12 +59,15 @@ func TestMetricRepository_DeleteByTimestamp(t *testing.T) {
 				mockSvc.On("Scan", mock.Anything, mock.Anything).Return(&dynamodb.ScanOutput{
 					Items: []map[string]types.AttributeValue{
 						{
-							"date":      &types.AttributeValueMemberS{Value: "2024-01-01"},
-							"scrapedAt": &types.AttributeValueMemberS{Value: "2024-01-01T00:00:00Z"},
+							"date": &types.AttributeValueMemberS{Value: "2024-01-01"},
+							"scrapedAt": &types.AttributeValueMemberS{
+								Value: "2024-01-01T00:00:00Z",
+							},
 						},
 					},
 				}, nil)
-				mockSvc.On("DeleteItem", mock.Anything, mock.Anything).Return(&dynamodb.DeleteItemOutput{}, nil)
+				mockSvc.On("DeleteItem", mock.Anything, mock.Anything).
+					Return(&dynamodb.DeleteItemOutput{}, nil)
 			},
 			wantErr: false,
 		},
@@ -60,7 +75,8 @@ func TestMetricRepository_DeleteByTimestamp(t *testing.T) {
 			name: "scan error",
 			ts:   "2024-01-01T00:00:00Z",
 			mockFn: func() {
-				mockSvc.On("Scan", mock.Anything, mock.Anything).Return(&dynamodb.ScanOutput{}, errors.New("scan error"))
+				mockSvc.On("Scan", mock.Anything, mock.Anything).
+					Return(&dynamodb.ScanOutput{}, errors.New("scan error"))
 			},
 			wantErr: true,
 		},
@@ -71,12 +87,15 @@ func TestMetricRepository_DeleteByTimestamp(t *testing.T) {
 				mockSvc.On("Scan", mock.Anything, mock.Anything).Return(&dynamodb.ScanOutput{
 					Items: []map[string]types.AttributeValue{
 						{
-							"date":      &types.AttributeValueMemberS{Value: "2024-01-01"},
-							"scrapedAt": &types.AttributeValueMemberS{Value: "2024-01-01T00:00:00Z"},
+							"date": &types.AttributeValueMemberS{Value: "2024-01-01"},
+							"scrapedAt": &types.AttributeValueMemberS{
+								Value: "2024-01-01T00:00:00Z",
+							},
 						},
 					},
 				}, nil)
-				mockSvc.On("DeleteItem", mock.Anything, mock.Anything).Return(&dynamodb.DeleteItemOutput{}, errors.New("delete error"))
+				mockSvc.On("DeleteItem", mock.Anything, mock.Anything).
+					Return(&dynamodb.DeleteItemOutput{}, errors.New("delete error"))
 			},
 			wantErr: true,
 		},
