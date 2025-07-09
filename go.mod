@@ -1,6 +1,6 @@
 module github.com/gkwa/easilydig
 
-go 1.23.2
+go 1.24.0
 
 toolchain go1.24.5
 
@@ -19,7 +19,7 @@ require (
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
-	sigs.k8s.io/controller-runtime v0.20.4
+	sigs.k8s.io/controller-runtime v0.21.0
 )
 
 require (
