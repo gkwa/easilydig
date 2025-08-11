@@ -36,7 +36,7 @@ jobs:
           go test ./...
       - name: Cache staticcheck
         id: cache-staticcheck
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
+        uses: actions/cache@638ed79f9dc94c1de1baef91bcab5edaa19451f4
         with:
           path: |
             ${{ runner.os == 'Windows' && '~\go\bin\staticcheck.exe' || '~/go/bin/staticcheck' }}
