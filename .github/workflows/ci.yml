@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-      - uses: actions/setup-go@faf52423ec0d44c58f68e83b614bfcd99dded66f
+      - uses: actions/setup-go@3a0c2c82458cbb45a3cbfeeb2b91ce8f85420560
         with:
           go-version: stable
           cache: true
