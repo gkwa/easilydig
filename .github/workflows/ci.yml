@@ -70,7 +70,7 @@ jobs:
         run: staticcheck ./...
       - name: Run GoReleaser
         if: runner.os == 'Linux'
-        uses: goreleaser/goreleaser-action@9cf36111e7ea38bea30119371229bf9ad8028289
+        uses: goreleaser/goreleaser-action@f3511a2bf5d6eb8da032c0ceecaa69d0dcd18623
         with:
           args: release --snapshot --skip=publish --clean
       - name: Colored Output Test
