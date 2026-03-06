@@ -2,7 +2,7 @@ module github.com/gkwa/easilydig
 
 go 1.25.6
 
-toolchain go1.26.0
+toolchain go1.26.1
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.41.3
