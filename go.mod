@@ -7,8 +7,8 @@ toolchain go1.26.1
 require (
 	github.com/aws/aws-sdk-go-v2 v1.41.4
 	github.com/aws/aws-sdk-go-v2/config v1.32.12
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.35
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.56.2
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.36
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.57.0
 	github.com/fatih/color v1.19.0
 	github.com/go-git/go-git/v5 v5.17.0
 	github.com/go-logr/logr v1.4.3
